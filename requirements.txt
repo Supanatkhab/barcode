@@ -1,0 +1,6 @@
+streamlit==1.26.0
+numpy==1.26.2
+Pillow==10.4.0
+zxingcpp==2.0.0
+requests==2.32.0
+supabase==3.12.0
