@@ -41,7 +41,7 @@ def classify_code(text: str) -> str:
             return "Part Number (P/N)"
     return "Other"
 
-# ---------------- Session state ----------------
+
 for key in ["main_barcode", "sn", "pn", "imei"]:
     if key not in st.session_state:
         st.session_state[key] = ""
