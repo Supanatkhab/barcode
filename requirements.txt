@@ -1,6 +1,7 @@
-streamlit==1.26.0
-numpy==1.26.2
+streamlit==1.38.0
+numpy==1.26.4
 Pillow==10.4.0
-zxingcpp==2.0.0
-requests==2.32.0
-supabase==3.12.0
+opencv-python-headless==4.10.0.84
+pyzbar==0.1.9
+requests==2.32.3
+supabase==2.5.1

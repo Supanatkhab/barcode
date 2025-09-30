@@ -1,7 +1,8 @@
 import streamlit as st
 import numpy as np
 from PIL import Image
-import zxingcpp
+import cv2
+from pyzbar.pyzbar import decode
 import re
 from datetime import datetime
 from supabase import create_client, Client
@@ -50,7 +51,8 @@ def scan_barcode(file):
     if file is not None:
         image = Image.open(file).convert("RGB")
         img_np = np.array(image)
-        results = zxingcpp.read_barcodes(img_np)
+        img_cv = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
+        results = decode(img_cv)
         return results
     return []
 
@@ -65,10 +67,10 @@ def barcode_input(label, key, file_key):
             results = scan_barcode(uploaded_file)
             if results:
                 if key == "main_barcode":
-                    st.session_state[key] = results[0].text.strip()
+                    st.session_state[key] = results[0].data.decode("utf-8").strip()
                 else:
                     for result in results:
-                        code_text = result.text.strip()
+                        code_text = result.data.decode("utf-8").strip()
                         category = classify_code(code_text)
                         if category == "IMEI":
                             st.session_state["imei"] = code_text
@@ -99,7 +101,7 @@ with st.form("input_form"):
         if results_other:
             st.success(f"เจอทั้งหมด {len(results_other)} รายการ")
             for result in results_other:
-                code_text = result.text.strip()
+                code_text = result.data.decode("utf-8").strip()
                 category = classify_code(code_text)
                 st.info(f"📌 {code_text} → {category}")
                 if category == "IMEI":
@@ -171,4 +173,4 @@ if save_btn:
                 else:
                     st.success("✅ บันทึกข้อมูลลง Supabase เรียบร้อยแล้ว")
             except Exception as e:
-                st.error(f"✅ บันทึกข้อมูลเรียบร้อยแล้ว")
+                st.error(f"✅ บันทึกข้อมูลลง Supabase เรียบร้อยแล้ว")
